@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "renderer"
+version = "0.1.0"
+description = "App to convert PDF file to images and serve them"
+authors = ["Jonas Petrovsky <jontesek@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.1.2"
+gunicorn = "^20.1.0"
+SQLAlchemy = "^1.4.39"
+psycopg2-binary = "^2.9.3"
+boto3 = "^1.24.22"
+dramatiq = {extras = ["redis", "watch"], version = "^1.13.0"}
+structlog = "^21.5.0"
+sentry-sdk = "^1.6.0"
+ddtrace = "^1.2.2"
+PyMuPDF = "^1.20.1"
+Pillow = "^9.2.0"
+pydantic = "^1.9.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.1.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
