@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: PDF Renderer API
+  description: Conversion of PDF files to normalized images
+paths:
+  /upload_pdf:
+    post:
+      description: Upload a PDF file you want to convert to images             
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Document is valid and will be converted
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  document_id:
+                    type: integer
+                    example: 1
+                  status:
+                    $ref: '#/components/schemas/status'
+                  page_count: 
+                    type: integer
+                    example: 2
+                  input_hash:
+                    type: string
+                    example: cf23df2207d99a74fbe169e3eba035e633b65d94
+                    description: SHA1 hash of the input file
+        '415':
+          description: Input file isn't a valid PDF document
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: error detail
+  /document/{documentId}:
+    get:
+      description: Get info about uploaded document
+      parameters:
+        - in: path
+          name: documentId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the document to get
+      responses:
+        '200': 
+          description: Document was found in DB
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/status'
+                    example: success
+                  page_count:
+                    type: integer
+                    example: 2
+        '404':
+          description: Document with this ID doesn't exist in DB
+          content:
+            text/plain:
+              schema:
+                type: string
+  /image/{documentId}/{pageNumber}:
+    get:
+      description: Get image based on document's page number
+      parameters:
+        - in: path
+          name: documentId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: pageNumber
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: A PNG file
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Cannot find document or image
+        '422':
+          description: Document is still beging processed
+        '400':
+          description: Page number is wrong
+  /ping:
+    get: 
+      description: Testing endpoint
+      responses: 
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema: 
+                type: string
+                format: string
+              example: pong
+components:
+  schemas:
+    status:
+      type: string
+      enum:
+        - processing
+        - error
+        - success

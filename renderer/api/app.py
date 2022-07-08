@@ -1,6 +1,7 @@
 import io
-from flask import Flask, request, Response, send_file
 import structlog
+from flask import Flask, request, Response, send_file
+from flask_swagger_ui import get_swaggerui_blueprint
 
 from .dependencies import get_core
 from ..database.repositories import DocumentNotFoundError, DocumentStatus
@@ -10,6 +11,13 @@ from ..worker import process_document
 app = Flask(__name__)
 logger = structlog.get_logger(__name__)
 core = get_core()
+
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    "/api/docs",
+    "/static/openapi_specification.yml"
+)
+app.register_blueprint(swaggerui_blueprint)
 
 
 @app.get("/ping")
@@ -51,7 +59,7 @@ def get_document(document_id: int) -> dict:
     }
 
 
-@app.get("/image/document_id=<int:document_id>&page_number=<int:page_number>")
+@app.get("/image/<int:document_id>/<int:page_number>")
 def get_image(document_id: int, page_number: int) -> bytes:
 
     try:

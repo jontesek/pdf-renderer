@@ -195,6 +195,17 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-swagger-ui"
+version = "4.11.1"
+description = "Swagger UI blueprint for Flask"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+flask = "*"
+
+[[package]]
 name = "gevent"
 version = "21.12.0"
 description = "Coroutine-based network library"
@@ -705,7 +716,7 @@ testing = ["coverage (>=5.0.3)", "zope-event", "zope-testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "0e4109d3b027ecaba766791751ab46eefe5f9ae06b72c9392d8579aaad80988f"
+content-hash = "3d9f270ff6eab538373dce50a3f92c230c0782de92906c2f6bdd777d7a8e13da"
 
 [metadata.files]
 async-timeout = [
@@ -887,6 +898,7 @@ flask = [
     {file = "Flask-2.1.2-py3-none-any.whl", hash = "sha256:fad5b446feb0d6db6aec0c3184d16a8c1f6c3e464b511649c8918a9be100b4fe"},
     {file = "Flask-2.1.2.tar.gz", hash = "sha256:315ded2ddf8a6281567edb27393010fe3406188bafbfe65a3339d5787d89e477"},
 ]
+flask-swagger-ui = []
 gevent = [
     {file = "gevent-21.12.0-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:2afa3f3ad528155433f6ac8bd64fa5cc303855b97004416ec719a6b1ca179481"},
     {file = "gevent-21.12.0-cp27-cp27m-win32.whl", hash = "sha256:177f93a3a90f46a5009e0841fef561601e5c637ba4332ab8572edd96af650101"},

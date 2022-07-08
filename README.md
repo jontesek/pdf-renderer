@@ -13,5 +13,7 @@ The service is then accessible on URL `http://0.0.0.0:5000` and you can use thre
 * POST `/upload`: upload PDF file and convert its pages to images
 * GET `/document/<id>`: get document info by its ID
     * example: `http://0.0.0.0:5000/document/1`
-* GET `/image/document_id=<id>&page_number=<no>`: get desired image file 
-    * example" `http://0.0.0.0:5000/image/document_id=1&page_number=1`
+* GET `/image/<document_id>/<page_number>`: get desired image file
+    * example" `http://0.0.0.0:5000/image/1/1`
+
+More details are available in the generated [Swagger docs](http://0.0.0.0:5000/api/docs).
