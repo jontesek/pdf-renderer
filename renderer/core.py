@@ -76,7 +76,9 @@ class Core:
         self.document_repository.update_by_id(document_id, status, processing_time)
         return status.name
 
-    def _process_page(self, page: fitz.Page, document_id: int, page_number: int):
+    def _process_page(
+        self, page: fitz.Page, document_id: int, page_number: int
+    ) -> None:
         log.info(
             "core.process_page.start", document_id=document_id, page_number=page_number
         )
@@ -86,7 +88,6 @@ class Core:
             width=self.image_settings.width,
             height=self.image_settings.height,
         )
-        print(type(img))
         path = f"{document_id}/{page_number}.png"
         self.s3_client.save_file(key=path, raw_data=img)
 
