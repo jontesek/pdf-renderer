@@ -12,6 +12,7 @@ x-common-variables: &common-variables
 services:
   app:
     image: renderer
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile
