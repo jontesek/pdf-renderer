@@ -1,3 +1,5 @@
+from ddtrace import patch_all
+patch_all()
 import io
 import sentry_sdk
 import structlog
