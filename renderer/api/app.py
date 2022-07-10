@@ -1,21 +1,32 @@
 import io
+import sentry_sdk
 import structlog
 from flask import Flask, request, Response, send_file
 from flask_swagger_ui import get_swaggerui_blueprint
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from .dependencies import get_core
 from ..database.repositories import DocumentNotFoundError, DocumentStatus
 from ..clients.s3 import FileNotFoundError
 from ..worker import process_document
+from .. import settings
+
+
+if not settings.local:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        integrations=[
+            FlaskIntegration(),
+        ],
+        traces_sample_rate=1.0,
+    )
 
 app = Flask(__name__)
 logger = structlog.get_logger(__name__)
 core = get_core()
 
-
 swaggerui_blueprint = get_swaggerui_blueprint(
-    "/api/docs",
-    "/static/openapi_specification.yml"
+    "/api/docs", "/static/openapi_specification.yml"
 )
 app.register_blueprint(swaggerui_blueprint)
 
