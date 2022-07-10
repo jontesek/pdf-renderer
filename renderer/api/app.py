@@ -81,8 +81,6 @@ def get_image(document_id: int, page_number: int) -> bytes:
     except FileNotFoundError:
         return Response("couldn't find desired image", status=404)
 
-    # f = open("/Users/kiwi/my-repos/pdf-renderer/test/test.png", "rb").read()
-
     return send_file(io.BytesIO(img), mimetype="image/png")
 
 

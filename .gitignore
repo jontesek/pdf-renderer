@@ -132,7 +132,7 @@ dmypy.json
 .DS_Store
 .vscode/
 notes.md
-test/
+my_test/
 
 # Data
 1s3_storage/
