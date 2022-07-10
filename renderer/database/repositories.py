@@ -7,34 +7,43 @@ from .models import Document, DocumentStatus
 
 
 class DocumentRepository:
-
-    def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]) -> None:
+    def __init__(
+        self, session_factory: Callable[..., AbstractContextManager[Session]]
+    ) -> None:
         self.session_factory = session_factory
 
     def add(self, status: DocumentStatus, page_count: int, input_hash: str) -> int:
         with self.session_factory() as session:
-            document = Document(status=status, page_count=page_count, input_hash=input_hash)
+            document = Document(
+                status=status, page_count=page_count, input_hash=input_hash
+            )
             session.add(document)
             session.commit()
             return document.id
 
     def get_by_id(self, document_id: int) -> Document:
         with self.session_factory() as session:
-            document = session.query(Document).filter(Document.id == document_id).first()
+            document = (
+                session.query(Document).filter(Document.id == document_id).first()
+            )
             if not document:
                 raise DocumentNotFoundError(document_id)
             return document
 
-    def update_by_id(self, document_id: int, status: DocumentStatus, processing_time: float) -> Document:
+    def update_by_id(
+        self, document_id: int, status: DocumentStatus, processing_time: float
+    ) -> Document:
         with self.session_factory() as session:
-            document = session.query(Document).filter(Document.id == document_id).first()
+            document = (
+                session.query(Document).filter(Document.id == document_id).first()
+            )
             if not document:
                 raise DocumentNotFoundError(document_id)
             document.status = status
             document.processing_time = processing_time
             session.commit()
             return document
-            
+
 
 class NotFoundError(Exception):
 

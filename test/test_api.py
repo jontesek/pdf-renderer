@@ -1,3 +1,4 @@
+# pylint: disable=redefined-outer-name
 import os
 import pathlib
 from unittest import mock
@@ -5,9 +6,9 @@ from unittest import mock
 import pytest
 
 from renderer.api.app import app, core
-from renderer.database.repositories import DocumentRepository, DocumentNotFoundError
-from renderer.database.models import Document, DocumentStatus
 from renderer.clients.s3 import S3Client
+from renderer.database.models import Document, DocumentStatus
+from renderer.database.repositories import DocumentNotFoundError, DocumentRepository
 
 
 @pytest.fixture()
@@ -101,7 +102,8 @@ def test_get_image_422(client):
 def test_get_image_400(client):
     repository_mock = mock.Mock(spec=DocumentRepository)
     repository_mock.get_by_id.return_value = Document(
-        id=1, page_count=2,
+        id=1,
+        page_count=2,
     )
     core.document_repository = repository_mock
     response = client.get("/image/1/20")

@@ -1,18 +1,16 @@
-from ddtrace import patch_all
-patch_all()
 import io
+
 import sentry_sdk
 import structlog
-from flask import Flask, request, Response, send_file
+from flask import Flask, Response, request, send_file
 from flask_swagger_ui import get_swaggerui_blueprint
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from .dependencies import get_core
-from ..database.repositories import DocumentNotFoundError, DocumentStatus
-from ..clients.s3 import FileNotFoundError
-from ..worker import process_document
 from .. import settings
-
+from ..clients.s3 import S3FileNotFoundError
+from ..database.repositories import DocumentNotFoundError, DocumentStatus
+from ..worker import process_document
+from .dependencies import get_core
 
 if not settings.local:
     sentry_sdk.init(
@@ -22,6 +20,9 @@ if not settings.local:
         ],
         traces_sample_rate=1.0,
     )
+    from ddtrace import patch_all
+
+    patch_all()
 
 app = Flask(__name__)
 logger = structlog.get_logger(__name__)
@@ -91,7 +92,7 @@ def get_image(document_id: int, page_number: int) -> bytes:
 
     try:
         img = core.get_image(document_id, page_number)
-    except FileNotFoundError:
+    except S3FileNotFoundError:
         return Response("couldn't find desired image", status=404)
 
     return send_file(io.BytesIO(img), mimetype="image/png")

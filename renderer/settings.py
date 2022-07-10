@@ -26,5 +26,6 @@ class ImageSettings(BaseModel):
     width: int = 1200
     height: int = 1600
 
+
 S3_DOCUMENTS_PREFIX = "documents"
 PDF_FILE_NAME = "input.pdf"

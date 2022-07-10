@@ -10,6 +10,7 @@ dramatiq.set_broker(redis_broker)
 logger = structlog.get_logger(__name__)
 core = get_core()
 
+
 @dramatiq.actor(max_retries=3)
 def process_document(document_id: int):
     logger.info("worker.process_document.start", document_id=document_id)

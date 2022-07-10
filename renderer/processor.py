@@ -1,20 +1,20 @@
+from io import BytesIO
+
 import fitz
 from PIL import Image
-from io import BytesIO
 
 
 class Processor:
     @staticmethod
     def load_pdf(raw_data: bytes) -> fitz.Document:
         """Check if the file is PDF and return a document for further processing."""
-
-        if type(raw_data) is not bytes:
+        if not isinstance(raw_data, bytes):
             raise ValueError("input data is not bytes")
 
         try:
             doc = fitz.open(stream=raw_data, filetype="pdf")
-        except (fitz.fitz.FileDataError, TypeError, fitz.fitz.EmptyFileError):
-            raise ValueError("input data is invalid")
+        except (fitz.fitz.FileDataError, TypeError, fitz.fitz.EmptyFileError) as e:
+            raise ValueError("input data is invalid") from e
 
         if "pdf" not in doc.metadata["format"].lower():
             raise ValueError("input data is not pdf")

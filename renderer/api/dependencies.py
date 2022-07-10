@@ -1,11 +1,11 @@
 import boto3
 
 from ..clients.s3 import S3Client
-from ..settings import S3_BUCKET, S3_CONFIG, S3_DOCUMENTS_PREFIX, ImageSettings, DB_URL
 from ..core import Core
-from ..processor import Processor
 from ..database.base import Database
 from ..database.repositories import DocumentRepository
+from ..processor import Processor
+from ..settings import DB_URL, S3_BUCKET, S3_CONFIG, S3_DOCUMENTS_PREFIX, ImageSettings
 
 # pylint: disable=invalid-name
 core = None
@@ -27,5 +27,10 @@ def get_core() -> Core:
         db = Database(DB_URL)
         db.create_database()
         repository = DocumentRepository(db.session)
-        core = Core(processor=Processor(), document_repository=repository, s3_client=s3_client, image_settings=ImageSettings())
+        core = Core(
+            processor=Processor(),
+            document_repository=repository,
+            s3_client=s3_client,
+            image_settings=ImageSettings(),
+        )
     return core

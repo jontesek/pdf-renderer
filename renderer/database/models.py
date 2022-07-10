@@ -1,13 +1,17 @@
 import enum
-from sqlalchemy import Column, Integer, Enum, SmallInteger, Float, DateTime, String
+
+from sqlalchemy import Column, DateTime, Enum, Float, Integer, SmallInteger, String
 from sqlalchemy.sql import func
 
 from .base import Base
 
+
+# pylint: disable=invalid-name
 class DocumentStatus(enum.Enum):
     processing = 1
     success = 2
     error = 3
+
 
 class Document(Base):
 
@@ -21,6 +25,8 @@ class Document(Base):
     input_hash = Column(String(length=50), nullable=False, comment="SHA1")
 
     def __repr__(self):
-        return f"<Document(id={self.id}, " \
-               f"status={self.status}, " \
-               f"page_count={self.page_count}"
+        return (
+            f"<Document(id={self.id}, "
+            f"status={self.status}, "
+            f"page_count={self.page_count}"
+        )

@@ -20,9 +20,7 @@ class S3Client:
     def save_file(self, key: str, raw_data: bytes) -> str:
         if self.path_prefix:
             key = f"{self.path_prefix}/{key}"
-        import io
         self.client.put_object(Body=raw_data, Bucket=self.bucket, Key=key)
-        # ContentType="image/png"
         return key
 
     def get_file(self, key: str) -> Optional[bytes]:
@@ -30,11 +28,11 @@ class S3Client:
             key = f"{self.path_prefix}/{key}"
         try:
             obj = self.client.get_object(Bucket=self.bucket, Key=key)
-        except self.client.exceptions.NoSuchKey:
-            raise FileNotFoundError(key)
+        except self.client.exceptions.NoSuchKey as e:
+            raise S3FileNotFoundError(key) from e
         return obj["Body"].read()
 
 
-class FileNotFoundError(Exception):
+class S3FileNotFoundError(Exception):
     def __init__(self, key):
         super().__init__(f"file {key} not found")

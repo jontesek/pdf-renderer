@@ -1,15 +1,15 @@
-import time
 import hashlib
+import time
 
 import fitz
 import structlog
 
 from renderer.database.models import DocumentStatus
 
-from .processor import Processor
 from .clients.s3 import S3Client
-from .settings import ImageSettings, PDF_FILE_NAME
 from .database.repositories import DocumentRepository
+from .processor import Processor
+from .settings import PDF_FILE_NAME, ImageSettings
 
 log = structlog.get_logger(__name__)
 
@@ -30,7 +30,7 @@ class Core:
     def handle_input_data(self, raw_data: bytes, document: fitz.Document):
         status = DocumentStatus.processing
         page_count = self.processor.get_page_count(document)
-        input_hash = hashlib.sha1(raw_data).hexdigest()
+        input_hash = hashlib.sha1(raw_data).hexdigest()  # nosec
         document_id = self.document_repository.add(status, page_count, input_hash)
         self.save_pdf_file(document_id, raw_data)
 
@@ -41,7 +41,9 @@ class Core:
             "input_hash": input_hash,
         }
 
-    def convert_document_to_images(self, raw_data: bytes, document_id: int) -> DocumentStatus:
+    def convert_document_to_images(
+        self, raw_data: bytes, document_id: int
+    ) -> DocumentStatus:
         document = self.processor.load_pdf(raw_data)
         page_count = document.page_count
         start_time = time.time()
@@ -52,9 +54,9 @@ class Core:
         )
         for p_n in range(1, page_count + 1):
             try:
-                page = document.load_page(p_n-1)
+                page = document.load_page(p_n - 1)
                 self._process_page(page, document_id, p_n)
-            except Exception:
+            except Exception:  # pylint:disable=broad-except
                 log.exception(
                     "core.convert_document_to_images.exception",
                     document_id=document_id,
